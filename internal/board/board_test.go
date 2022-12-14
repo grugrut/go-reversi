@@ -60,3 +60,14 @@ func TestRotate90(t *testing.T) {
 		t.Errorf("4 x Rotate90(%b) == %b, want %b", b, got, want)
 	}
 }
+
+func TestRotateHorizontal(t *testing.T) {
+	var b, got, want uint64
+	b = 0x1020408001020408
+	got = RotateHorizontal(b)
+	want = 0x0804020180402010
+
+	if got != want {
+		t.Errorf("RotateHorizontal(%b) == %b, want %b", b, got, want)
+	}
+}

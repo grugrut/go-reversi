@@ -93,3 +93,16 @@ func Rotate90(b uint64) uint64 {
 
 	return b
 }
+
+// RotateHorizontal は盤面を180度反転させる
+func RotateHorizontal(b uint64) uint64 {
+	var k1 uint64 = 0x5555555555555555
+	var k2 uint64 = 0x3333333333333333
+	var k3 uint64 = 0x0f0f0f0f0f0f0f0f
+
+	b = ((b >> 1) & k1) + 2*(b&k1)
+	b = ((b >> 2) & k2) + 4*(b&k2)
+	b = ((b >> 4) & k3) + 16*(b&k3)
+
+	return b
+}
