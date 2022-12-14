@@ -69,3 +69,27 @@ func Count(b uint64) int {
 
 	return (int)(b & 0x7f)
 }
+
+// Rotate90は盤面を反時計回りに90度回転する
+func Rotate90(b uint64) uint64 {
+	var tmp uint64
+	var k1 uint64 = 0x5500550055005500
+	var k2 uint64 = 0x3333000033330000
+	var k3 uint64 = 0x0f0f0f0f00000000
+
+	tmp = k3 & (b ^ (b << 28))
+	b ^= tmp ^ (tmp >> 28)
+	tmp = k2 & (b ^ (b << 14))
+	b ^= tmp ^ (tmp >> 14)
+	tmp = k1 & (b ^ (b << 7))
+	b ^= tmp ^ (tmp >> 7)
+
+	var l1 uint64 = 0x00ff00ff00ff00ff
+	var l2 uint64 = 0x0000ffff0000ffff
+
+	b = ((b >> 8) & l1) | ((b & l1) << 8)
+	b = ((b >> 16) & l2) | ((b & l2) << 16)
+	b = (b >> 32) | (b << 32)
+
+	return b
+}
