@@ -106,3 +106,74 @@ func RotateHorizontal(b uint64) uint64 {
 
 	return b
 }
+
+// GetPlacable はself番のプレイヤーが配置できる箇所を返す
+func GetPlacable(self uint64, oppo uint64) uint64 {
+	var result, tmp, guard uint64
+
+	// left
+	guard = 0x7e7e7e7e7e7e7e7e
+	tmp = (self << 1) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp << 1) & oppo & guard
+	}
+	result |= (tmp << 1) & ^(self | oppo)
+
+	// up left
+	guard = 0x007e7e7e7e7e7e7e
+	tmp = (self << 9) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp << 9) & oppo & guard
+	}
+	result |= (tmp << 9) & ^(self | oppo)
+
+	// up
+	guard = 0x00ffffffffffffff
+	tmp = (self << 8) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp << 8) & oppo & guard
+	}
+	result |= (tmp << 8) & ^(self | oppo)
+
+	// up right
+	guard = 0x007e7e7e7e7e7e7e
+	tmp = (self << 7) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp << 7) & oppo & guard
+	}
+	result |= (tmp << 7) & ^(self | oppo)
+
+	// right
+	guard = 0x7e7e7e7e7e7e7e7e
+	tmp = (self >> 1) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp >> 1) & oppo & guard
+	}
+	result |= (tmp >> 1) & ^(self | oppo)
+
+	// down right
+	guard = 0x7e7e7e7e7e7e7e00
+	tmp = (self >> 9) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp >> 9) & oppo & guard
+	}
+	result |= (tmp >> 9) & ^(self | oppo)
+
+	// down
+	guard = 0xffffffffffffff00
+	tmp = (self >> 8) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp >> 8) & oppo & guard
+	}
+	result |= (tmp >> 8) & ^(self | oppo)
+
+	// down left
+	guard = 0x7e7e7e7e7e7e7e00
+	tmp = (self >> 7) & oppo & guard
+	for i := 0; i < 5; i++ {
+		tmp |= (tmp >> 7) & oppo & guard
+	}
+	result |= (tmp >> 7) & ^(self | oppo)
+
+	return result
+}

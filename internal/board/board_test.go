@@ -71,3 +71,47 @@ func TestRotateHorizontal(t *testing.T) {
 		t.Errorf("RotateHorizontal(%b) == %b, want %b", b, got, want)
 	}
 }
+
+func TestGetPlacable(t *testing.T) {
+	var self, oppo, got, want uint64
+
+	// 1つ返せるパターン
+	self = 0x0000200000000000
+	oppo = 0x0070507000000000
+	want = 0xA8008800A8000000
+
+	got = GetPlacable(self, oppo)
+	if got != want {
+		t.Errorf("GetPlacable(%b, %b) == %b, want %b", self, oppo, got, want)
+	}
+
+	// 2つ返せるパターン
+	self = 0x0000001000000000
+	oppo = 0x007C7C6C7C7C0000
+	want = 0x9200008200009200
+
+	got = GetPlacable(self, oppo)
+	if got != want {
+		t.Errorf("GetPlacable(%b, %b) == %b, want %b", self, oppo, got, want)
+	}
+
+	// 返せる位置には自石があり返せないパターン
+	self = 0x007C4454447C0000
+	oppo = 0x0000382838000000
+	want = 0x0000000000000000
+
+	got = GetPlacable(self, oppo)
+	if got != want {
+		t.Errorf("GetPlacable(%b, %b) == %b, want %b", self, oppo, got, want)
+	}
+
+	// 辺や角で返せる位置が無いパターン
+	self = 0x004A02400002CA00
+	oppo = 0x89008180810100FB
+	want = 0x0000000000000000
+
+	got = GetPlacable(self, oppo)
+	if got != want {
+		t.Errorf("GetPlacable(%b, %b) == %b, want %b", self, oppo, got, want)
+	}
+}
